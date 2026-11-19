@@ -1,0 +1,155 @@
+<title>PeoplePulse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+/* Layout: a monthly people report. Summary text first, KPI strip, then three charts
+   (headcount over time, attrition by department, recruiting funnel) each with its table,
+   and the privacy rules. One series per chart, one hue. */
+:root {
+  --bg: #f7f7f5; --surface: #fcfcfb; --sunk: #efefec; --ink: #0b0b0b; --muted: #52514e; --line: #dddcd6; --grid: #e7e6e1;
+  --series-1: #2a78d6; --series-1-soft: #dbe8f8; --warn: #b4232f;
+  --f: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; --mono: ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #121211; --surface: #1a1a19; --sunk: #161615; --ink: #f0efec; --muted: #c3c2b7; --line: #2d2c29; --grid: #262523;
+    --series-1: #3987e5; --series-1-soft: #1b2b40; --warn: #f08a96; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #121211; --surface: #1a1a19; --sunk: #161615; --ink: #f0efec; --muted: #c3c2b7; --line: #2d2c29; --grid: #262523;
+  --series-1: #3987e5; --series-1-soft: #1b2b40; --warn: #f08a96; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
+h1, h2 { margin: 0; text-wrap: balance; } h1 { font-size: clamp(1.8rem, 3.5vw, 2.3rem); } h2 { font-size: 1.15rem; }
+p { margin: 0; } .muted { color: var(--muted); } .sub { font-size: .85rem; color: var(--muted); }
+.eyebrow { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--series-1); }
+header { display: grid; gap: 8px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.summary { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--series-1); border-radius: 6px; padding: 14px 18px; max-width: 80ch; display: grid; gap: 6px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.kpi { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.kpi .v { font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } }
+svg { display: block; width: 100%; height: auto; max-width: 100%; }
+svg text { fill: var(--muted); font: 11px var(--f); }
+svg .val { fill: var(--ink); font-weight: 600; }
+.hit { fill: transparent; } .hit:hover + .mark, .mark:hover { opacity: .8; }
+.tscroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th { text-align: left; font-weight: 600; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--sunk); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+td.num, th.num { text-align: right; }
+.flag { color: var(--warn); font-weight: 600; }
+details summary { cursor: pointer; color: var(--series-1); font-weight: 600; font-size: .88rem; margin-top: 8px; }
+.tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: .8rem; padding: 5px 8px; border-radius: 4px; display: none; z-index: 5; }
+ul.rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">People analytics · monthly report</span>
+    <h1>PeoplePulse</h1>
+    <p class="muted" id="lead"></p>
+  </header>
+  <div class="summary"><strong>This month in four sentences</strong><p id="summary"></p><span class="sub" id="summary-src"></span></div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Headcount at the end of each month</h2>
+    <div class="panel"><div id="hc-chart"></div>
+      <details><summary>Show as table</summary><div class="tscroll"><table><thead><tr><th>Month</th><th class="num">Headcount</th><th class="num">Hires</th><th class="num">Voluntary exits</th><th class="num">Involuntary exits</th></tr></thead><tbody id="hc-table"></tbody></table></div></details>
+    </div>
+  </section>
+
+  <div class="two">
+    <section>
+      <h2>Voluntary attrition, last 12 months</h2>
+      <div class="panel"><div id="att-chart"></div><p class="sub" style="margin-top:8px">Voluntary leavers ÷ average headcount. Company: <span id="att-co"></span>.</p></div>
+    </section>
+    <section>
+      <h2>Recruiting funnel, roles opened in the last 12 months</h2>
+      <div class="panel"><div id="funnel-chart"></div><p class="sub" style="margin-top:8px" id="rec-sub"></p></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Departments</h2>
+    <div class="panel tscroll" style="padding:0"><table><thead><tr><th>Department</th><th class="num">Headcount</th><th class="num">Voluntary leavers (12m)</th><th class="num">Attrition (12m)</th><th class="num">Open roles</th><th class="num">Engagement (1–5)</th></tr></thead><tbody id="dept"></tbody></table></div>
+  </section>
+
+  <section>
+    <h2>Privacy rules applied</h2>
+    <div class="panel"><ul class="rules">
+      <li>Only pseudonymous employee IDs are used. No names or contact details.</li>
+      <li>Any group with fewer than 5 people is shown as <strong>&lt;5</strong>, so no one can be singled out (here: Group IT's engagement score, 4 respondents).</li>
+      <li>Only aggregated numbers leave the tool, including what an optional AI summary receives.</li>
+    </ul></div>
+  </section>
+  <footer>Portfolio project by Rafia Tasnim. All employees, departments and numbers are fictional and generated by a script.</footer>
+</div>
+<div class="tip" id="tip" role="status"></div>
+
+<script>
+const DATA = {"month": "2026-09", "as_of": "2026-09-30", "monthly": [{"month": "2025-10", "headcount": 359, "hires": 9, "exits_voluntary": 4, "exits_involuntary": 0}, {"month": "2025-11", "headcount": 364, "hires": 9, "exits_voluntary": 4, "exits_involuntary": 0}, {"month": "2025-12", "headcount": 372, "hires": 11, "exits_voluntary": 2, "exits_involuntary": 1}, {"month": "2026-01", "headcount": 380, "hires": 9, "exits_voluntary": 1, "exits_involuntary": 0}, {"month": "2026-02", "headcount": 389, "hires": 10, "exits_voluntary": 1, "exits_involuntary": 0}, {"month": "2026-03", "headcount": 391, "hires": 10, "exits_voluntary": 6, "exits_involuntary": 2}, {"month": "2026-04", "headcount": 397, "hires": 9, "exits_voluntary": 3, "exits_involuntary": 0}, {"month": "2026-05", "headcount": 402, "hires": 9, "exits_voluntary": 4, "exits_involuntary": 0}, {"month": "2026-06", "headcount": 401, "hires": 9, "exits_voluntary": 7, "exits_involuntary": 3}, {"month": "2026-07", "headcount": 403, "hires": 8, "exits_voluntary": 5, "exits_involuntary": 1}, {"month": "2026-08", "headcount": 407, "hires": 9, "exits_voluntary": 5, "exits_involuntary": 0}, {"month": "2026-09", "headcount": 411, "hires": 10, "exits_voluntary": 6, "exits_involuntary": 0}], "attrition": {"leavers": 48, "avg_headcount": 382.5, "rate": 12.5}, "departments": [{"department": "Investments", "headcount": 121, "voluntary_leavers_12m": 10, "attrition_rate_12m": 9.2, "open_roles": 2, "engagement": 3.83, "survey_respondents": 42, "avg_headcount_12m": 109.0}, {"department": "Technology & Solutions", "headcount": 76, "voluntary_leavers_12m": 10, "attrition_rate_12m": 14.3, "open_roles": 0, "engagement": 3.86, "survey_respondents": 33, "avg_headcount_12m": 70.0}, {"department": "Asset Management", "headcount": 75, "voluntary_leavers_12m": 19, "attrition_rate_12m": 25.7, "open_roles": 1, "engagement": 3.4, "survey_respondents": 49, "avg_headcount_12m": 74.0}, {"department": "Finance", "headcount": 56, "voluntary_leavers_12m": 4, "attrition_rate_12m": 7.7, "open_roles": 2, "engagement": 3.81, "survey_respondents": 30, "avg_headcount_12m": 52.0}, {"department": "Legal & Compliance", "headcount": 39, "voluntary_leavers_12m": 2, "attrition_rate_12m": 5.6, "open_roles": 2, "engagement": 3.77, "survey_respondents": 18, "avg_headcount_12m": 35.5}, {"department": "Group IT", "headcount": 22, "voluntary_leavers_12m": 1, "attrition_rate_12m": 4.9, "open_roles": 1, "engagement": "<5", "survey_respondents": 4, "avg_headcount_12m": 20.5}, {"department": "People & Culture", "headcount": 22, "voluntary_leavers_12m": 2, "attrition_rate_12m": 9.3, "open_roles": 1, "engagement": 4.06, "survey_respondents": 11, "avg_headcount_12m": 21.5}], "recruiting": {"funnel": [{"stage": "Applicants", "count": 5201}, {"stage": "Screened", "count": 1649}, {"stage": "Interviewed", "count": 690}, {"stage": "Offers", "count": 99}, {"stage": "Accepted", "count": 51}], "filled_roles": 51, "open_roles": 9, "median_days_to_hire": 57, "offer_acceptance_pct": 61, "days_by_department": {"Asset Management": 47, "Finance": 57, "Group IT": 56, "Investments": 52, "Legal & Compliance": 47, "People & Culture": 51, "Technology & Solutions": 77}}, "gender_by_level": [{"level": "Analyst", "employees": 164, "women_pct": 35}, {"level": "Associate", "employees": 134, "women_pct": 46}, {"level": "Manager", "employees": 83, "women_pct": 51}, {"level": "Director", "employees": 30, "women_pct": 53}], "kpis": {"headcount": 411, "hires_12m": 112, "leavers_12m": 48, "attrition_rate": 12.5, "open_roles": 9, "median_days_to_hire": 57, "offer_acceptance_pct": 61}, "summary": "Headcount is 411 at the end of September 2026, up 52 over 12 months. Voluntary attrition over the last 12 months is 12.5% for the company and highest in Asset Management (25.7%). 9 roles are open; the median time to hire is 57 days and 61% of offers made were accepted. The lowest engagement score is in Asset Management (3.4 of 5), worth discussing together with its attrition.", "summary_source": "Generated from the numbers"};
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const mon = (m) => new Date(m + "-01T00:00:00").toLocaleDateString("en-GB", { month: "short", year: "2-digit" });
+  const K = DATA.kpis, tip = $("tip");
+  const show = (e, t) => { tip.textContent = t; tip.style.display = "block"; tip.style.left = (e.clientX + 12) + "px"; tip.style.top = (e.clientY + 12) + "px"; };
+  const hide = () => { tip.style.display = "none"; };
+  document.addEventListener("pointermove", (e) => { const t = e.target.closest("[data-tip]"); t ? show(e, t.dataset.tip) : hide(); });
+
+  $("lead").textContent = `Report for ${new Date(DATA.as_of + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" })}, built automatically from HR, recruiting and survey data.`;
+  $("summary").textContent = DATA.summary; $("summary-src").textContent = DATA.summary_source;
+  $("kpis").innerHTML = [[K.headcount, "Headcount"], [K.hires_12m, "Hires, 12 months"], [K.attrition_rate + "%", "Voluntary attrition, 12 months"],
+    [K.open_roles, "Open roles"], [K.median_days_to_hire + " days", "Median time to hire"], [K.offer_acceptance_pct + "%", "Offers accepted"]]
+    .map(([v, l]) => `<div class="kpi"><span class="v">${v}</span><span class="sub">${l}</span></div>`).join("");
+
+  // Headcount line: one series, 2px line, endpoint emphasised, value-axis ticks on a nice scale
+  (function () {
+    const m = DATA.monthly, W = 900, H = 260, L = 44, R = 20, T = 16, B = 30;
+    const vals = m.map((r) => r.headcount), lo = Math.floor(Math.min(...vals) / 20) * 20 - 20, hi = Math.ceil(Math.max(...vals) / 20) * 20;
+    const x = (i) => L + i * (W - L - R) / (m.length - 1), y = (v) => T + (hi - v) / (hi - lo) * (H - T - B);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Headcount rose from ${vals[0]} to ${vals.at(-1)} over 12 months">`;
+    for (let v = lo; v <= hi; v += 20) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+    m.forEach((r, i) => { if (i % 2 === 0 || i === m.length - 1) s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${mon(r.month)}</text>`; });
+    const pts = m.map((r, i) => `${x(i)},${y(r.headcount)}`).join(" ");
+    s += `<polygon points="${L},${y(lo)} ${pts} ${x(m.length - 1)},${y(lo)}" fill="var(--series-1-soft)" opacity=".6"/>`;
+    s += `<polyline points="${pts}" fill="none" stroke="var(--series-1)" stroke-width="2"/>`;
+    m.forEach((r, i) => { s += `<rect class="hit" x="${x(i) - 18}" y="${T}" width="36" height="${H - T - B}" data-tip="${mon(r.month)}: ${r.headcount} employees, ${r.hires} hires, ${r.exits_voluntary + r.exits_involuntary} exits"/>`; });
+    s += `<circle cx="${x(m.length - 1)}" cy="${y(vals.at(-1))}" r="5" fill="var(--series-1)" stroke="var(--surface)" stroke-width="2"/>`;
+    s += `<text class="val" x="${x(m.length - 1) - 8}" y="${y(vals.at(-1)) - 10}" text-anchor="end">${vals.at(-1)}</text></svg>`;
+    $("hc-chart").innerHTML = s;
+    $("hc-table").innerHTML = m.map((r) => `<tr><td>${mon(r.month)}</td><td class="num">${r.headcount}</td><td class="num">${r.hires}</td><td class="num">${r.exits_voluntary}</td><td class="num">${r.exits_involuntary}</td></tr>`).join("");
+  })();
+
+  // Attrition by department: horizontal bars, sorted, value labels, company rate as a reference line
+  function hbars(rows, max, fmt, label, ref) {
+    const W = 520, rowH = 30, L = 170, R = 56, H = rows.length * rowH + 10;
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+    rows.forEach((r, i) => {
+      const yy = 6 + i * rowH, w = Math.max(2, r.value / max * (W - L - R));
+      s += `<text x="${L - 8}" y="${yy + 15}" text-anchor="end">${esc(r.name)}</text>`;
+      s += `<rect class="mark" x="${L}" y="${yy + 4}" width="${w}" height="16" rx="4" fill="var(--series-1)" data-tip="${esc(r.name)}: ${fmt(r.value)}"/>`;
+      s += `<text class="val" x="${L + w + 6}" y="${yy + 16}">${fmt(r.value)}</text>`;
+    });
+    if (ref != null) { const rx = L + ref / max * (W - L - R); s += `<line x1="${rx}" x2="${rx}" y1="0" y2="${H}" stroke="var(--muted)" stroke-dasharray="3 3"/>`; }
+    return s + "</svg>";
+  }
+  const deps = DATA.departments.filter((d) => typeof d.attrition_rate_12m === "number").sort((a, b) => b.attrition_rate_12m - a.attrition_rate_12m);
+  $("att-chart").innerHTML = hbars(deps.map((d) => ({ name: d.department, value: d.attrition_rate_12m })), Math.max(...deps.map((d) => d.attrition_rate_12m)) * 1.05,
+    (v) => v + "%", "Voluntary attrition by department", DATA.attrition.rate);
+  $("att-co").textContent = DATA.attrition.rate + "% (dashed line)";
+
+  const f = DATA.recruiting.funnel;
+  $("funnel-chart").innerHTML = hbars(f.map((s) => ({ name: s.stage, value: s.count })), f[0].count * 1.05, (v) => v.toLocaleString("en-GB"), "Recruiting funnel");
+  $("rec-sub").textContent = `${f.at(-1).count} roles filled through recruiting from ${f[0].count.toLocaleString("en-GB")} applicants. Median ${DATA.recruiting.median_days_to_hire} days from opening a role to an accepted offer.`;
+
+  const worst = deps[0]?.department;
+  $("dept").innerHTML = DATA.departments.map((d) => `<tr><td>${esc(d.department)}</td><td class="num">${d.headcount}</td><td class="num">${d.voluntary_leavers_12m}</td>
+    <td class="num ${d.department === worst ? "flag" : ""}">${typeof d.attrition_rate_12m === "number" ? d.attrition_rate_12m + "%" : esc(d.attrition_rate_12m)}</td>
+    <td class="num">${d.open_roles}</td><td class="num">${esc(d.engagement)}</td></tr>`).join("");
+})();
+</script>

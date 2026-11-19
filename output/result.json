@@ -1,0 +1,237 @@
+{
+  "month": "2026-09",
+  "as_of": "2026-09-30",
+  "monthly": [
+    {
+      "month": "2025-10",
+      "headcount": 359,
+      "hires": 9,
+      "exits_voluntary": 4,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2025-11",
+      "headcount": 364,
+      "hires": 9,
+      "exits_voluntary": 4,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2025-12",
+      "headcount": 372,
+      "hires": 11,
+      "exits_voluntary": 2,
+      "exits_involuntary": 1
+    },
+    {
+      "month": "2026-01",
+      "headcount": 380,
+      "hires": 9,
+      "exits_voluntary": 1,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2026-02",
+      "headcount": 389,
+      "hires": 10,
+      "exits_voluntary": 1,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2026-03",
+      "headcount": 391,
+      "hires": 10,
+      "exits_voluntary": 6,
+      "exits_involuntary": 2
+    },
+    {
+      "month": "2026-04",
+      "headcount": 397,
+      "hires": 9,
+      "exits_voluntary": 3,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2026-05",
+      "headcount": 402,
+      "hires": 9,
+      "exits_voluntary": 4,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2026-06",
+      "headcount": 401,
+      "hires": 9,
+      "exits_voluntary": 7,
+      "exits_involuntary": 3
+    },
+    {
+      "month": "2026-07",
+      "headcount": 403,
+      "hires": 8,
+      "exits_voluntary": 5,
+      "exits_involuntary": 1
+    },
+    {
+      "month": "2026-08",
+      "headcount": 407,
+      "hires": 9,
+      "exits_voluntary": 5,
+      "exits_involuntary": 0
+    },
+    {
+      "month": "2026-09",
+      "headcount": 411,
+      "hires": 10,
+      "exits_voluntary": 6,
+      "exits_involuntary": 0
+    }
+  ],
+  "attrition": {
+    "leavers": 48,
+    "avg_headcount": 382.5,
+    "rate": 12.5
+  },
+  "departments": [
+    {
+      "department": "Investments",
+      "headcount": 121,
+      "voluntary_leavers_12m": 10,
+      "attrition_rate_12m": 9.2,
+      "open_roles": 2,
+      "engagement": 3.83,
+      "survey_respondents": 42,
+      "avg_headcount_12m": 109.0
+    },
+    {
+      "department": "Technology & Solutions",
+      "headcount": 76,
+      "voluntary_leavers_12m": 10,
+      "attrition_rate_12m": 14.3,
+      "open_roles": 0,
+      "engagement": 3.86,
+      "survey_respondents": 33,
+      "avg_headcount_12m": 70.0
+    },
+    {
+      "department": "Asset Management",
+      "headcount": 75,
+      "voluntary_leavers_12m": 19,
+      "attrition_rate_12m": 25.7,
+      "open_roles": 1,
+      "engagement": 3.4,
+      "survey_respondents": 49,
+      "avg_headcount_12m": 74.0
+    },
+    {
+      "department": "Finance",
+      "headcount": 56,
+      "voluntary_leavers_12m": 4,
+      "attrition_rate_12m": 7.7,
+      "open_roles": 2,
+      "engagement": 3.81,
+      "survey_respondents": 30,
+      "avg_headcount_12m": 52.0
+    },
+    {
+      "department": "Legal & Compliance",
+      "headcount": 39,
+      "voluntary_leavers_12m": 2,
+      "attrition_rate_12m": 5.6,
+      "open_roles": 2,
+      "engagement": 3.77,
+      "survey_respondents": 18,
+      "avg_headcount_12m": 35.5
+    },
+    {
+      "department": "Group IT",
+      "headcount": 22,
+      "voluntary_leavers_12m": 1,
+      "attrition_rate_12m": 4.9,
+      "open_roles": 1,
+      "engagement": "<5",
+      "survey_respondents": 4,
+      "avg_headcount_12m": 20.5
+    },
+    {
+      "department": "People & Culture",
+      "headcount": 22,
+      "voluntary_leavers_12m": 2,
+      "attrition_rate_12m": 9.3,
+      "open_roles": 1,
+      "engagement": 4.06,
+      "survey_respondents": 11,
+      "avg_headcount_12m": 21.5
+    }
+  ],
+  "recruiting": {
+    "funnel": [
+      {
+        "stage": "Applicants",
+        "count": 5201
+      },
+      {
+        "stage": "Screened",
+        "count": 1649
+      },
+      {
+        "stage": "Interviewed",
+        "count": 690
+      },
+      {
+        "stage": "Offers",
+        "count": 99
+      },
+      {
+        "stage": "Accepted",
+        "count": 51
+      }
+    ],
+    "filled_roles": 51,
+    "open_roles": 9,
+    "median_days_to_hire": 57,
+    "offer_acceptance_pct": 61,
+    "days_by_department": {
+      "Asset Management": 47,
+      "Finance": 57,
+      "Group IT": 56,
+      "Investments": 52,
+      "Legal & Compliance": 47,
+      "People & Culture": 51,
+      "Technology & Solutions": 77
+    }
+  },
+  "gender_by_level": [
+    {
+      "level": "Analyst",
+      "employees": 164,
+      "women_pct": 35
+    },
+    {
+      "level": "Associate",
+      "employees": 134,
+      "women_pct": 46
+    },
+    {
+      "level": "Manager",
+      "employees": 83,
+      "women_pct": 51
+    },
+    {
+      "level": "Director",
+      "employees": 30,
+      "women_pct": 53
+    }
+  ],
+  "kpis": {
+    "headcount": 411,
+    "hires_12m": 112,
+    "leavers_12m": 48,
+    "attrition_rate": 12.5,
+    "open_roles": 9,
+    "median_days_to_hire": 57,
+    "offer_acceptance_pct": 61
+  },
+  "summary": "Headcount is 411 at the end of September 2026, up 52 over 12 months. Voluntary attrition over the last 12 months is 12.5% for the company and highest in Asset Management (25.7%). 9 roles are open; the median time to hire is 57 days and 61% of offers made were accepted. The lowest engagement score is in Asset Management (3.4 of 5), worth discussing together with its attrition.",
+  "summary_source": "Generated from the numbers"
+}

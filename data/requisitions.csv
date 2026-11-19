@@ -1,0 +1,61 @@
+req_id,department,level,opened,filled,applicants,screened,interviewed,offers,accepted
+R001,People & Culture,Manager,2026-06-05,2026-08-04,124,43,21,2,1
+R002,Investments,Associate,2026-05-09,2026-06-28,83,29,14,1,1
+R003,Finance,Manager,2026-02-12,2026-04-10,112,31,14,2,1
+R004,Finance,Manager,2026-08-09,,101,33,14,3,0
+R005,People & Culture,Associate,2025-11-19,2026-01-01,77,30,10,2,1
+R006,Finance,Manager,2026-01-03,2026-03-23,138,47,22,1,1
+R007,Asset Management,Associate,2025-11-28,2026-02-03,99,26,11,3,1
+R008,Group IT,Analyst,2026-02-07,2026-03-14,139,37,14,2,1
+R009,Finance,Manager,2026-05-27,2026-07-14,62,22,8,1,1
+R010,Technology & Solutions,Analyst,2026-01-04,2026-03-07,126,39,15,3,1
+R011,Technology & Solutions,Associate,2026-01-22,2026-04-25,59,23,11,3,1
+R012,Group IT,Manager,2026-05-21,2026-07-26,50,18,8,2,1
+R013,Finance,Associate,2026-03-09,2026-05-25,149,47,19,2,1
+R014,People & Culture,Manager,2026-02-06,2026-03-12,93,34,13,1,1
+R015,Legal & Compliance,Analyst,2026-08-21,,103,29,13,2,0
+R016,Asset Management,Manager,2026-09-20,,148,51,26,1,0
+R017,Legal & Compliance,Associate,2026-03-20,2026-04-27,86,25,10,1,1
+R018,People & Culture,Associate,2026-05-29,2026-08-07,35,9,4,1,1
+R019,Asset Management,Manager,2025-11-27,2025-12-29,138,42,20,1,1
+R020,Finance,Analyst,2026-08-27,,40,11,4,1,0
+R021,Finance,Analyst,2026-07-02,2026-09-15,41,10,4,1,1
+R022,Legal & Compliance,Analyst,2025-12-07,2026-02-19,106,40,17,2,1
+R023,Investments,Manager,2026-07-16,2026-09-22,146,44,15,3,1
+R024,Technology & Solutions,Manager,2026-07-06,2026-09-21,38,11,4,2,1
+R025,Technology & Solutions,Associate,2025-12-14,2026-03-11,95,27,10,2,1
+R026,Asset Management,Manager,2026-02-13,2026-03-28,31,8,3,2,1
+R027,Finance,Associate,2026-05-09,2026-06-15,33,11,4,2,1
+R028,Investments,Associate,2026-05-21,2026-07-28,29,9,3,1,1
+R029,Technology & Solutions,Manager,2026-03-14,2026-05-30,33,10,4,2,1
+R030,Investments,Analyst,2026-07-20,,150,52,19,3,0
+R031,Asset Management,Associate,2026-02-07,2026-04-23,63,19,10,1,1
+R032,Technology & Solutions,Associate,2026-06-04,2026-07-31,39,12,5,2,1
+R033,Investments,Manager,2026-04-29,2026-06-01,35,13,6,2,1
+R034,People & Culture,Associate,2026-07-03,2026-08-28,147,42,17,1,1
+R035,People & Culture,Analyst,2026-06-27,2026-09-20,144,49,25,1,1
+R036,People & Culture,Associate,2026-08-30,,49,18,8,2,0
+R037,Asset Management,Analyst,2026-05-08,2026-07-01,88,25,12,1,1
+R038,Legal & Compliance,Associate,2025-12-24,2026-02-12,157,54,25,2,1
+R039,Technology & Solutions,Manager,2025-11-24,2026-01-18,36,10,4,1,1
+R040,Investments,Analyst,2025-12-10,2026-01-31,49,12,5,1,1
+R041,Legal & Compliance,Associate,2026-09-04,,82,30,10,1,0
+R042,People & Culture,Analyst,2026-05-13,2026-06-28,67,17,6,2,1
+R043,People & Culture,Analyst,2026-04-19,2026-07-01,38,12,5,3,1
+R044,People & Culture,Manager,2026-07-02,2026-08-06,66,17,8,1,1
+R045,Finance,Manager,2026-03-15,2026-05-09,39,15,5,2,1
+R046,Technology & Solutions,Associate,2026-07-14,2026-09-13,146,46,19,1,1
+R047,Asset Management,Manager,2026-08-07,2026-09-05,70,19,8,1,1
+R048,Investments,Associate,2025-12-25,2026-01-29,112,41,15,1,1
+R049,Asset Management,Manager,2026-08-07,2026-09-23,97,27,10,2,1
+R050,Investments,Manager,2026-09-14,,127,37,16,1,0
+R051,Technology & Solutions,Analyst,2026-03-22,2026-06-23,40,11,6,2,1
+R052,Asset Management,Manager,2025-11-28,2026-01-25,124,38,16,1,1
+R053,People & Culture,Associate,2026-07-20,2026-08-22,91,35,17,2,1
+R054,Investments,Analyst,2025-11-14,2026-01-22,89,33,12,1,1
+R055,Group IT,Analyst,2026-06-25,2026-09-06,35,11,5,2,1
+R056,Asset Management,Manager,2025-12-11,2026-01-23,84,21,9,1,1
+R057,Legal & Compliance,Analyst,2026-07-01,2026-08-14,136,41,16,2,1
+R058,Group IT,Associate,2025-12-13,2026-01-29,127,38,15,1,1
+R059,Group IT,Analyst,2026-08-02,,118,45,15,2,0
+R060,Technology & Solutions,Analyst,2026-05-15,2026-08-07,42,13,6,1,1
